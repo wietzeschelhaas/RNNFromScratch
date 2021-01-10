@@ -8,17 +8,18 @@ public class Main {
 
 
     static CharTokenizer charTokenizer;
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
 
         int seqLength = 25;
-        int inputSize = 0;
+        int numEpoch = 1;
 
         String fullData = "";
         charTokenizer = new CharTokenizer();
 
 
         try {
-            File myObj = new File("C:/Users/wietz/Desktop/textGen/alice.txt");
+            File myObj = new File("C:/Users/ietze/Desktop/test.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -32,22 +33,45 @@ public class Main {
         }
 
         ArrayList<Matrix> sequence = new ArrayList<Matrix>();
-        //get first seq of chars
-        for (int i = 0; i < seqLength; i++) {
-            Matrix input = new Matrix(charTokenizer.getSize(),1);
-            input.matrix[charTokenizer.getIndex(fullData.charAt(i))][0] = 1;
+        Matrix target = new Matrix(seqLength, 1);
 
-            sequence.add(input);
+        RNN rnn = new RNN(charTokenizer.getSize(),40,charTokenizer.getSize(),seqLength);
+
+
+        for (int i = 0; i < fullData.length()-1; i+=seqLength) {
+            if(i%500 == 0){
+                System.out.println(i);
+                System.out.println(rnn.totalLoss);
+            }
+
+
+            for (int j = 0; j < seqLength; j++) {
+                Matrix input = new Matrix(charTokenizer.getSize(), 1);
+                input.matrix[charTokenizer.getIndex(fullData.charAt(i+j))][0] = 1;
+
+                sequence.add(input);
+                target.matrix[j][0] = charTokenizer.getIndex(fullData.charAt(i+j + 1));
+
+
+            }
+            rnn.train(sequence,target);
+            sequence.clear();
+
+
+
 
         }
 
-        charTokenizer.p();
 
 
-        RNN rnn = new RNN(charTokenizer.getSize(),50,charTokenizer.getSize(),seqLength);
+        //charTokenizer.p();
 
-        Matrix out = rnn.feedForward(sequence);
 
+        //RNN rnn = new RNN(charTokenizer.getSize(),50,charTokenizer.getSize(),seqLength);
+
+        //Matrix out = rnn.feedForward(sequence);
+
+        //test to see if results sums to 1
 //        float sum = 0;
 //        for (int i = 0; i < out.rows; i++) {
 //            sum += out.matrix[i][0];
@@ -55,9 +79,12 @@ public class Main {
 //
 //        System.out.println(sum);
 
-        System.out.println(out);
+        //rnn.train(sequence,target);
 
     }
 
-
 }
+
+
+
+

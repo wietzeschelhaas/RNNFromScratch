@@ -95,6 +95,19 @@ public class Matrix {
         }
     }
 
+    public void sub(Matrix m){
+        if(m.rows != this.rows || m.columns != this.columns){
+            System.out.println("incompatible dimensions");
+            return;
+        }
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                matrix[i][j] -= m.matrix[i][j];
+            }
+        }
+    }
+
     static Matrix sub(Matrix a,Matrix b){
         if(a.rows != b.rows || a.columns != b.columns){
             System.out.println("incompatible dimensions");
@@ -150,7 +163,7 @@ public class Matrix {
 
     void hadamardMult(Matrix b){
         if(b.rows != this.rows || b.columns != this.columns){
-            System.out.println("incompatible dimensions");
+            System.out.println("incompatible dimensions at hadamardmult");
             return;
         }
         for (int i = 0; i < rows; i++) {
@@ -159,6 +172,43 @@ public class Matrix {
             }
         }
     }
+    static Matrix hadamardMult(Matrix a,Matrix b){
+        if(b.rows != a.rows || b.columns != a.columns){
+            System.out.println("incompatible dimensions at hadamardmult");
+            return null;
+        }
+        Matrix multed = new Matrix(a.rows,b.columns);
+        for (int i = 0; i < a.rows; i++) {
+            for (int j = 0; j < a.columns; j++) {
+                multed.matrix[i][j] = a.matrix[i][j] * b.matrix[i][j];
+            }
+        }
+        return multed;
+    }
+
+     public void div(Matrix m){
+        if(m.rows != this.rows || m.columns != this.columns){
+            System.out.println("incompatible dimensions at div");
+            return;
+        }
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                float a = matrix[i][j];
+                matrix[i][j] = a/m.matrix[i][j];
+            }
+        }
+    }
+
+    public void sqrt(){
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                double a = matrix[i][j];
+                matrix[i][j] = (float)Math.sqrt(a);
+            }
+        }
+    }
+
     //returns the dot product between vectors a and b represented as an array of floats
     private static float dot(float[] a,float[] b) {
         float d = 0;

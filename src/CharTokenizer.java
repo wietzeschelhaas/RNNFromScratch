@@ -38,6 +38,6 @@ public class CharTokenizer {
     }
 
     public int getSize(){
-        return count;
+        return count+1;
     }
 }
